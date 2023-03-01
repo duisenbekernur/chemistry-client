@@ -15,7 +15,7 @@ const AllUsers = () => {
     async function fetchUsers() {
       const { data } = await axios.get("/admin/users");
       setIsLoading(false);
-      setUsers(data);
+      setUsers(data.users);
     }
 
     fetchUsers();

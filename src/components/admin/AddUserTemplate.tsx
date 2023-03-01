@@ -5,6 +5,7 @@ import {
   CardHeader,
   Heading,
   Input,
+  Spinner,
   useToast,
 } from "@chakra-ui/react";
 import axios from "../../axios";
@@ -13,13 +14,19 @@ import React, { useState } from "react";
 const AddUserTemplate = () => {
   const [login, setLogin] = useState("");
   const [password, setPassword] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   const toast = useToast();
 
   const handleCreateUser = async () => {
+    setIsLoading(true);
     const { data } = await axios.post("/admin/users", {
       name: login,
       password,
+    });
+    setIsLoading(false);
+    const addToCloudRes = await axios.post("/admin/addUserToCloud", {
+      name: login,
     });
 
     toast({
@@ -56,7 +63,17 @@ const AddUserTemplate = () => {
       </CardHeader>
       <CardFooter>
         <Button colorScheme="green" onClick={handleCreateUser}>
-          Добавить пользователя
+          {isLoading ? (
+            <Spinner
+              thickness="4px"
+              speed="0.65s"
+              emptyColor="gray.200"
+              color="blue.500"
+              size="lg"
+            />
+          ) : (
+            "Добавить пользователя"
+          )}
         </Button>
       </CardFooter>
     </Card>

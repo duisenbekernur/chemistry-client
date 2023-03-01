@@ -23,3 +23,13 @@ export interface IVideo {
   updatedAt: string;
   courseId: number;
 }
+
+export interface IQuestion {
+  id: number;
+  question: string;
+  answers: string[];
+  createdAt: string;
+  updatedAt: string;
+  videoId: number;
+  answerIds: number[];
+}

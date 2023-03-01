@@ -9,16 +9,26 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import axios from "../../axios";
-import React, { ChangeEvent, useState } from "react";
+import React, { ChangeEvent, useEffect, useState } from "react";
+import { redirect, useNavigate } from "react-router-dom";
 
 const AddVideoTemplate = () => {
   const [fileList, setFileList] = useState<Object | null>(null);
   const [isLoaing, setIsLoading] = useState(false);
+  const [googleToken, setGoogleToken] = useState<string | null>(null);
 
   const toast = useToast();
 
+  const navigate = useNavigate();
+
   const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) setFileList(e.target.files[0]);
+  };
+
+  const loginGoogle = async () => {
+    const { data } = await axios.get("/admin/authorizeGoogle");
+
+    window.open(data.authUrl);
   };
 
   const handleCreateVideo = async (uploadedFile: any) => {
@@ -47,6 +57,12 @@ const AddVideoTemplate = () => {
     console.log(data);
   };
 
+  useEffect(() => {
+    setGoogleToken(localStorage.getItem("token2"));
+    if (googleToken) {
+    }
+  }, []);
+
   return (
     <Card w="400px">
       <CardHeader w="400px">
@@ -58,7 +74,10 @@ const AddVideoTemplate = () => {
           <Input onChange={handleFileChange} multiple type="file" />
         </Heading>
       </CardHeader>
-      <CardFooter>
+      <CardFooter display="flex" flexDirection="column" gap="2">
+        {!googleToken && (
+          <Button onClick={loginGoogle}>Войдите в гугл акк</Button>
+        )}
         <Button colorScheme="green" onClick={handleCreateVideo}>
           {!isLoaing ? (
             "Добавить видео"

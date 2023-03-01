@@ -19,10 +19,12 @@ const Course = () => {
     setIsLoading(true);
     const { data } = await axios.get(`/admin/getVideosOfCourse/${id}`);
     setIsLoading(false);
+    console.log(data);
     setVideos(data.videos);
   };
 
   useEffect(() => {
+    if (!localStorage.getItem("token")) navigate("/login");
     fetchVideos();
   }, []);
 

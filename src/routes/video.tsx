@@ -6,6 +6,8 @@ import { useNavigate, useParams } from "react-router-dom";
 import Questions from "../components/Questions";
 import Layout from "../components/Layout";
 import { FaArrowLeft } from "react-icons/fa";
+import { IQuestion } from "../types";
+import ReactPlayer from "react-player";
 
 interface IVideo {
   id: number;
@@ -18,17 +20,25 @@ interface IVideo {
 
 const Video = () => {
   const [video, setVideo] = useState<IVideo | null>(null);
+  const [questions, setQuestions] = useState<IQuestion[] | null>(null);
 
   const { id } = useParams();
   const navigate = useNavigate();
 
   const fetchVideo = async () => {
-    const { data } = await axios.get(`/admin//getVideo/${id}`);
+    const { data } = await axios.get(`/admin/getVideo/${id}`);
     setVideo(data.video);
   };
 
+  const handleGetQuestionsOfVideo = async () => {
+    const { data } = await axios.get(`/admin/questions/${id}`);
+    setQuestions(data);
+  };
+
   useEffect(() => {
+    if (!localStorage.getItem("token")) navigate("/login");
     fetchVideo();
+    handleGetQuestionsOfVideo();
   }, []);
 
   return (
@@ -43,13 +53,16 @@ const Video = () => {
             Видео: {video?.name}
           </Text>
         </Flex>
-        <Flex>
-          <AspectRatio>
-            <video src="https://storage.googleapis.com/nimbl/652333414.mp4" />
-          </AspectRatio>
+        <Flex justifyContent={"center"}>
+          <ReactPlayer
+            controls
+            url={
+              "https://www.youtube.com/watch?v=rHuHv1_0-0w&ab_channel=AlsidoFootball"
+            }
+          />
         </Flex>
 
-        <Questions />
+        <Questions questions={questions} />
       </Layout>
     </>
   );

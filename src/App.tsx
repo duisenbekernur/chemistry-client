@@ -5,10 +5,13 @@ import { useEffect, useState } from "react";
 import Navbar from "./components/Navbar";
 import Layout from "./components/Layout";
 import Sceletons from "./components/Sceletons";
+import { useNavigate } from "react-router-dom";
 
 function Home() {
   const [courses, setCourses] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+
+  const navigate = useNavigate();
 
   const fetchCourses = async () => {
     setIsLoading(true);
@@ -18,6 +21,7 @@ function Home() {
   };
 
   useEffect(() => {
+    if (!localStorage.getItem("token")) navigate("/login");
     fetchCourses();
   }, []);
 

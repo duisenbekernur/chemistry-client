@@ -4,15 +4,20 @@ import Navbar from "../components/Navbar";
 import jwt from "jsonwebtoken";
 import axios from "../axios";
 import Layout from "../components/Layout";
+import { useNavigate } from "react-router-dom";
 
 const Account = () => {
   const [userDatas, setUserDatas] = useState<any>();
+
+  const navigate = useNavigate();
+
   const getUser = async () => {
     const user = await JSON.parse(localStorage.getItem("userDatas") || "");
     setUserDatas(user);
   };
 
   useEffect(() => {
+    if (!localStorage.getItem("token")) navigate("/login");
     getUser();
   }, []);
 

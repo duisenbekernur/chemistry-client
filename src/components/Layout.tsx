@@ -11,7 +11,7 @@ const Layout: FC<LayoutProps> = ({ children }) => {
     <Flex
       direction="column"
       gap="25"
-      w={1400}
+      maxW={1400}
       margin="auto"
       justifyContent="center"
     >

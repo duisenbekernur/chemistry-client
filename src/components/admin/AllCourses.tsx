@@ -13,7 +13,7 @@ const AllCourses = () => {
     async function fetchUsers() {
       const { data } = await axios.get("/course");
       setIsLoading(false);
-      setCourses(data);
+      setCourses(data.courses);
     }
 
     fetchUsers();

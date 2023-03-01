@@ -1,10 +1,8 @@
-import { SimpleGrid } from "@chakra-ui/react";
+import { SimpleGrid, useDisclosure } from "@chakra-ui/react";
 import axios from "../../axios";
 import React, { useEffect, useState } from "react";
 import { ICourse, IVideo } from "../../types";
 import Sceletons from "../Sceletons";
-import AdminCourseCard from "./AdminCourseCard";
-import VideoCard from "../VideoCard";
 import AdminVideoCard from "./AdminVideoCard";
 
 const AllVideos = () => {
@@ -15,7 +13,8 @@ const AllVideos = () => {
     async function fetchUsers() {
       const { data } = await axios.get("/admin/videos");
       setIsLoading(false);
-      setVideos(data);
+      setVideos(data.videos);
+      console.log()
     }
 
     fetchUsers();

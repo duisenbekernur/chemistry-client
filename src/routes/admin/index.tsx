@@ -15,9 +15,29 @@ import AllVideos from "../../components/admin/AllVideos";
 import Navbar from "../../components/Navbar";
 import { useEffect } from "react";
 import AddVideoTemplate from "../../components/admin/AddVideoTemplate";
+import { useNavigate } from "react-router-dom";
+import axios from "../../axios";
 
 const Admin = () => {
-  useEffect(() => {}, []);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!localStorage.getItem("token")) {
+      navigate("/login");
+      return;
+    }
+
+    async function isAdmin() {
+      const { data } = await axios.get("/admin/users");
+
+      if (!data) {
+        navigate("/");
+        return;
+      }
+    }
+
+    isAdmin();
+  }, []);
 
   return (
     <Flex flexDirection="column">

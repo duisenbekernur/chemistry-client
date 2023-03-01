@@ -16,6 +16,7 @@ import {
   ModalHeader,
   ModalOverlay,
   SimpleGrid,
+  Spinner,
   Stack,
   Text,
   useDisclosure,
@@ -28,6 +29,9 @@ import { ICourse, IUser, IVideo } from "../../types";
 const AdminCourseCard: FC<ICourse> = ({ id, name, createdAt }) => {
   const toast = useToast();
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const [isLoadingDeleteCourse, setIsLoadingDeleteCourse] = useState(false);
+  const [isLoadingDeleteUser, setIsLoadingDeleteUser] = useState(false);
+  const [isLoadingAddUser, setIsLoadingAddUser] = useState(false);
 
   const [users, setUsers] = useState<IUser[] | null>(null);
   const [videos, setVideos] = useState<IVideo[] | null>(null);
@@ -39,27 +43,27 @@ const AdminCourseCard: FC<ICourse> = ({ id, name, createdAt }) => {
   };
 
   const getUsersOfCourse = async () => {
+    setIsLoadingDeleteUser(true);
     const { data } = await axios.get(`/admin/getUsersByCourse/${id}`);
+    setIsLoadingDeleteUser(false);
     setUsers(data);
   };
 
-  const handleAddUserFromCourse = async (userId: string) => {
+  const handleAddUserToCourse = async (userId: string) => {
+    setIsLoadingAddUser(true);
     const { data } = await axios.post("/admin/addUserToCourse", {
       userId,
       courseId: id,
     });
-
+    setIsLoadingAddUser(false);
+    //@ts-ignore
+    if (data.user) setUsers([...users, data.user]);
     toast({
-      title:
-        data.message === "Succesfully added"
-          ? "Успешно добавлено"
-          : "Такой пользователь не существует",
-      status: data.message === "Succesfully added" ? "success" : "error",
+      title: data.message,
+      status: data.message === "Успешно добавлено" ? "success" : "error",
       duration: 4000,
       isClosable: true,
     });
-
-    console.log(data);
   };
 
   const handleDeleteUserFromCourse = async (userId: number) => {
@@ -69,18 +73,26 @@ const AdminCourseCard: FC<ICourse> = ({ id, name, createdAt }) => {
     });
 
     toast({
-      title: "Пользователь успешно удалено с курса",
-      status: "success",
+      title: data.message,
+      status:
+        data.message === "Пользователь успешно удалено с курса"
+          ? "success"
+          : "error",
       duration: 4000,
       isClosable: true,
     });
+
+    //@ts-ignore
+    setUsers(users?.filter((user) => user.id !== userId));
   };
 
   const handleDeleteCourse = async () => {
+    setIsLoadingDeleteCourse(true);
     const { data } = await axios.delete(`/course/delete/${id}`);
+    setIsLoadingDeleteCourse(false);
     toast({
-      title: "Курс успешно удалено",
-      status: "success",
+      title: data.message,
+      status: data.message === "Курс успешно удалено" ? "success" : "error",
       duration: 4000,
       isClosable: true,
     });
@@ -141,7 +153,17 @@ const AdminCourseCard: FC<ICourse> = ({ id, name, createdAt }) => {
               colorScheme="red"
               onClick={handleDeleteCourse}
             >
-              Удалить курс
+              {isLoadingDeleteCourse ? (
+                <Spinner
+                  thickness="4px"
+                  speed="0.65s"
+                  emptyColor="gray.200"
+                  color="blue.500"
+                  size="lg"
+                />
+              ) : (
+                "Удалить курс"
+              )}
             </Button>
           </ButtonGroup>
         </CardFooter>
@@ -167,7 +189,17 @@ const AdminCourseCard: FC<ICourse> = ({ id, name, createdAt }) => {
                       colorScheme="red"
                       onClick={() => handleDeleteUserFromCourse(user.id)}
                     >
-                      Удалить пользователя
+                      {isLoadingDeleteUser ? (
+                        <Spinner
+                          thickness="4px"
+                          speed="0.65s"
+                          emptyColor="gray.200"
+                          color="blue.500"
+                          size="lg"
+                        />
+                      ) : (
+                        "Удалить пользователя"
+                      )}
                     </Button>
                   </CardFooter>
                 </Card>
@@ -186,9 +218,19 @@ const AdminCourseCard: FC<ICourse> = ({ id, name, createdAt }) => {
                   <Button
                     colorScheme="green"
                     //@ts-ignore
-                    onClick={() => handleAddUserFromCourse(addUserId)}
+                    onClick={() => handleAddUserToCourse(addUserId)}
                   >
-                    Добавить пользователя
+                    {isLoadingAddUser ? (
+                      <Spinner
+                        thickness="4px"
+                        speed="0.65s"
+                        emptyColor="gray.200"
+                        color="blue.500"
+                        size="lg"
+                      />
+                    ) : (
+                      "Добавить пользователя"
+                    )}
                   </Button>
                 </CardFooter>
               </Card>
@@ -199,7 +241,6 @@ const AdminCourseCard: FC<ICourse> = ({ id, name, createdAt }) => {
           </ModalFooter>
         </ModalContent>
       </Modal>
-
     </>
   );
 };
