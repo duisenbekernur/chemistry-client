@@ -117,7 +117,7 @@ const AdminVideoCard: FC<IVideo> = (video) => {
           <ModalBody display="flex" gap={3}>
             {questions?.map((question: IQuestion, index: number) => (
               <Card w={"min-content"} position="relative">
-                <CardHeader>
+                <CardHeader display="flex" flexDirection="column" gap={3}>
                   <Heading size="md">ID: {question.id}</Heading>
                   <Heading size="md">{question.question}</Heading>
                   {question.answers.map(
@@ -132,6 +132,7 @@ const AdminVideoCard: FC<IVideo> = (video) => {
                         >
                           {answer}{" "}
                         </Text>
+                        <hr />
                       </>
                     )
                   )}

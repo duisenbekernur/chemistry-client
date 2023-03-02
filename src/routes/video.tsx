@@ -6,17 +6,8 @@ import { useNavigate, useParams } from "react-router-dom";
 import Questions from "../components/Questions";
 import Layout from "../components/Layout";
 import { FaArrowLeft } from "react-icons/fa";
-import { IQuestion } from "../types";
+import { IQuestion, IVideo } from "../types";
 import ReactPlayer from "react-player";
-
-interface IVideo {
-  id: number;
-  link: string;
-  name: string;
-  size: number;
-  createdAt: string;
-  updatedAt: string;
-}
 
 const Video = () => {
   const [video, setVideo] = useState<IVideo | null>(null);
@@ -54,12 +45,7 @@ const Video = () => {
           </Text>
         </Flex>
         <Flex justifyContent={"center"}>
-          <ReactPlayer
-            controls
-            url={
-              "https://www.youtube.com/watch?v=rHuHv1_0-0w&ab_channel=AlsidoFootball"
-            }
-          />
+          <ReactPlayer controls url={video?.link} />
         </Flex>
 
         <Questions questions={questions} />

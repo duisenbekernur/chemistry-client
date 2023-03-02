@@ -10,12 +10,12 @@ import {
 } from "@chakra-ui/react";
 import axios from "../../axios";
 import React, { ChangeEvent, useEffect, useState } from "react";
-import { redirect, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const AddVideoTemplate = () => {
   const [fileList, setFileList] = useState<Object | null>(null);
   const [isLoaing, setIsLoading] = useState(false);
-  const [googleToken, setGoogleToken] = useState<string | null>(null);
+  const [videoLink, setVideoLink] = useState<string | null>(null);
 
   const toast = useToast();
 
@@ -25,27 +25,20 @@ const AddVideoTemplate = () => {
     if (e.target.files) setFileList(e.target.files[0]);
   };
 
-  const loginGoogle = async () => {
-    const { data } = await axios.get("/admin/authorizeGoogle");
-
-    window.open(data.authUrl);
-  };
-
-  const handleCreateVideo = async (uploadedFile: any) => {
-    if (!fileList) {
+  const handleCreateVideo = async () => {
+    if (!videoLink || videoLink === "") {
       toast({
-        title: "Видео не прикреплен",
+        title: "Введите правильную ссылку",
         status: "error",
         duration: 4000,
         isClosable: true,
       });
       return;
     }
-    const formData = new FormData();
-    //@ts-ignore
-    if (fileList) formData.append("video", fileList);
     setIsLoading(true);
-    const { data } = await axios.post("/admin/uploadVideo", formData);
+    const { data } = await axios.post("/admin/uploadVideo", {
+      link: videoLink,
+    });
     setIsLoading(false);
     toast({
       title: data.message,
@@ -57,27 +50,24 @@ const AddVideoTemplate = () => {
     console.log(data);
   };
 
-  useEffect(() => {
-    setGoogleToken(localStorage.getItem("token2"));
-    if (googleToken) {
-    }
-  }, []);
+  console.log(videoLink);
 
   return (
     <Card w="400px">
       <CardHeader w="400px">
-        <Heading mb="15px" size="lg">
+        <Heading mb={5} size="lg">
           Новое видео
         </Heading>
-        <Heading mb="15px" size="md">
-          Выберите файл:{" "}
-          <Input onChange={handleFileChange} multiple type="file" />
+        <Heading size="md">
+          Вставьте ссылку на видео:{" "}
+          <Input
+            onChange={(e) => setVideoLink(e.target.value)}
+            value={videoLink ? videoLink : ""}
+            type="text"
+          />
         </Heading>
       </CardHeader>
       <CardFooter display="flex" flexDirection="column" gap="2">
-        {!googleToken && (
-          <Button onClick={loginGoogle}>Войдите в гугл акк</Button>
-        )}
         <Button colorScheme="green" onClick={handleCreateVideo}>
           {!isLoaing ? (
             "Добавить видео"

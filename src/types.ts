@@ -18,7 +18,6 @@ export interface IVideo {
   id: number;
   link: string;
   name: string;
-  size: number;
   createdAt: string;
   updatedAt: string;
   courseId: number;

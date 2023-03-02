@@ -32,7 +32,6 @@ const AllVideos = () => {
               createdAt={video.createdAt}
               updatedAt={video.updatedAt}
               link={video.link}
-              size={video.size}
               courseId={video.courseId}
             />
           ))

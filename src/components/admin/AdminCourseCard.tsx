@@ -17,7 +17,6 @@ import {
   ModalOverlay,
   SimpleGrid,
   Spinner,
-  Stack,
   Text,
   useDisclosure,
   useToast,
@@ -32,14 +31,51 @@ const AdminCourseCard: FC<ICourse> = ({ id, name, createdAt }) => {
   const [isLoadingDeleteCourse, setIsLoadingDeleteCourse] = useState(false);
   const [isLoadingDeleteUser, setIsLoadingDeleteUser] = useState(false);
   const [isLoadingAddUser, setIsLoadingAddUser] = useState(false);
+  const [isOpenVideoModal, setIsOpenVideoModal] = useState(false);
+  const [isLoadingDeletevideo, setIsLoadingDeletevideo] = useState(false);
+  const [isLoadingAddVideo, setIsLoadingAddVideo] = useState(false);
 
   const [users, setUsers] = useState<IUser[] | null>(null);
   const [videos, setVideos] = useState<IVideo[] | null>(null);
   const [addUserId, setAddUserId] = useState<string | null>(null);
+  const [addVideoId, setAddVideoId] = useState<string | null>(null);
 
   const getVideosOfCourse = async () => {
     const { data } = await axios.get(`/admin/getVideosOfCourse/${id}`);
-    console.log(data);
+    setVideos(data.videos);
+  };
+
+  const handlleAddVideoToCourse = async (videoId: number) => {
+    setIsLoadingAddVideo(true);
+    const { data } = await axios.post("/admin/addVideoToCourse", {
+      videoId,
+      courseId: id,
+    });
+    setIsLoadingAddVideo(false);
+    toast({
+      title: data.message,
+      status: data.message === "Успешно добавлено" ? "success" : "error",
+      duration: 4000,
+      isClosable: true,
+    });
+    //@ts-ignore
+    if (data.video) setVideos([...videos, data.video]);
+  };
+
+  const handleDeleteVideoFromCourse = async (videoId: number) => {
+    setIsLoadingDeletevideo(true);
+    const { data } = await axios.delete(
+      `/admin/deleteVideoFromCourse/${videoId}`
+    );
+    setIsLoadingDeletevideo(false);
+    toast({
+      title: data.message,
+      status:
+        data.message === "Видео успешно удалено с курса!" ? "success" : "error",
+      duration: 4000,
+      isClosable: true,
+    });
+    if (videos) setVideos(videos?.filter((v) => v.id !== videoId));
   };
 
   const getUsersOfCourse = async () => {
@@ -143,7 +179,7 @@ const AdminCourseCard: FC<ICourse> = ({ id, name, createdAt }) => {
               colorScheme="green"
               onClick={() => {
                 getVideosOfCourse();
-                onOpen();
+                setIsOpenVideoModal(true);
               }}
             >
               Видосы курса
@@ -230,6 +266,92 @@ const AdminCourseCard: FC<ICourse> = ({ id, name, createdAt }) => {
                       />
                     ) : (
                       "Добавить пользователя"
+                    )}
+                  </Button>
+                </CardFooter>
+              </Card>
+            </SimpleGrid>
+          </ModalBody>
+          <ModalFooter>
+            <Button onClick={onClose}>Закрыть</Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
+
+      {/* Videos modal */}
+      <Modal
+        onClose={() => setIsOpenVideoModal(false)}
+        size="full"
+        isOpen={isOpenVideoModal}
+      >
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>Курс: {name}</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody>
+            <SimpleGrid columns={[1, 2, 3, 4, 5, 6]} spacing={5}>
+              {videos?.map((video: IVideo, index: number) => (
+                <Card border="1px solid black" key={index}>
+                  <CardHeader>
+                    <Heading mb={3} size="md">
+                      ID: {video.id}
+                    </Heading>
+                    <hr />
+                    <Heading mb={3} mt={3} size="md">
+                      Название: {video.name}
+                    </Heading>
+                    <hr />
+                    <Heading mb={3} size="md">
+                      Ссылка: {video.link}
+                    </Heading>
+                  </CardHeader>
+                  <CardFooter>
+                    <Button
+                      colorScheme="red"
+                      onClick={() => handleDeleteVideoFromCourse(video.id)}
+                    >
+                      {isLoadingDeletevideo ? (
+                        <Spinner
+                          thickness="4px"
+                          speed="0.65s"
+                          emptyColor="gray.200"
+                          color="blue.500"
+                          size="lg"
+                        />
+                      ) : (
+                        "Удалить видео"
+                      )}
+                    </Button>
+                  </CardFooter>
+                </Card>
+              ))}
+              <Card border="1px solid black">
+                <CardHeader>
+                  <Heading size="md">
+                    ID:{" "}
+                    <Input
+                      value={addVideoId ? addVideoId : ""}
+                      onChange={(e) => setAddVideoId(e.target.value)}
+                      placeholder="id"
+                    />
+                  </Heading>
+                </CardHeader>
+                <CardFooter>
+                  <Button
+                    colorScheme="green"
+                    //@ts-ignore
+                    onClick={() => handlleAddVideoToCourse(addVideoId)}
+                  >
+                    {isLoadingAddVideo ? (
+                      <Spinner
+                        thickness="4px"
+                        speed="0.65s"
+                        emptyColor="gray.200"
+                        color="blue.500"
+                        size="lg"
+                      />
+                    ) : (
+                      "Добавить видео"
                     )}
                   </Button>
                 </CardFooter>

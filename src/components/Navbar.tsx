@@ -1,9 +1,19 @@
 import {
   Button,
   Flex,
+  IconButton,
+  Modal,
+  ModalBody,
+  ModalCloseButton,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+  ModalOverlay,
   Switch,
+  Text,
   useColorMode,
   useColorModeValue,
+  useDisclosure,
 } from "@chakra-ui/react";
 import axios from "../axios";
 import React, { useEffect, useRef, useState } from "react";
@@ -15,6 +25,9 @@ import { decodeToken } from "react-jwt";
 
 const Navbar = () => {
   const [username, setUsername] = useState("");
+  const [isMobile, setIsMobile] = useState(false);
+
+  const { isOpen, onOpen, onClose } = useDisclosure();
 
   const { toggleColorMode } = useColorMode();
   const backgroundColor = useColorModeValue("teal.100", "teal.700");
@@ -40,79 +53,160 @@ const Navbar = () => {
   };
 
   useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 440);
+    };
+
+    handleResize();
+
+    window.addEventListener("resize", handleResize);
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
+
+  useEffect(() => {
     checkAdmin();
     console.log(window.innerWidth);
   }, [window.innerWidth]);
 
   return (
-    <Flex
-      p="0 15px"
-      ref={navRef}
-      justifyContent="space-between"
-      w={"100%"}
-      mb="15"
-      background={backgroundColor}
-    >
+    <>
       <Flex
+        p="0 15px"
+        ref={navRef}
         justifyContent="space-between"
-        alignItems="center"
-        h="60px"
-        w="1400px"
-        margin="0 auto"
+        w={"100%"}
+        mb="15"
+        background={backgroundColor}
       >
-        {window.innerWidth > 425 ? (
-          <Flex gap={25} alignItems="center">
-            {typeof window !== "undefined" &&
-              window.localStorage.getItem("isLogged") &&
-              [username, "Мои курсы"].map((name: string, index: number) => (
-                <Button
-                  colorScheme={
-                    activeMenu !== null && index === +activeMenu
-                      ? "whatsapp"
-                      : "gray"
-                  }
-                  key={index}
-                  onClick={() => {
-                    window.localStorage.setItem("activeMenu", index.toString());
-                    if (activeMenu)
-                      navigate(
-                        +activeMenu === 1
-                          ? username === "admin"
-                            ? "/client/admin"
-                            : "/account"
-                          : "/"
-                      );
-                  }}
-                >
-                  {index === 0 && <BiUser style={{ marginRight: "5px" }} />}
-                  {name}
+        <Flex
+          justifyContent="space-between"
+          alignItems="center"
+          h="60px"
+          w="1400px"
+          margin="0 auto"
+        >
+          {!isMobile ? (
+            <>
+              <Flex gap={25} alignItems="center">
+                {typeof window !== "undefined" &&
+                  window.localStorage.getItem("isLogged") &&
+                  [username, "Мои курсы"].map((name: string, index: number) => (
+                    <Button
+                      colorScheme={
+                        activeMenu !== null && index === +activeMenu
+                          ? "whatsapp"
+                          : "gray"
+                      }
+                      key={index}
+                      onClick={() => {
+                        window.localStorage.setItem(
+                          "activeMenu",
+                          index.toString()
+                        );
+                        if (activeMenu)
+                          navigate(
+                            +activeMenu === 1
+                              ? username === "admin"
+                                ? "/client/admin"
+                                : "/account"
+                              : "/"
+                          );
+                      }}
+                    >
+                      {index === 0 && <BiUser style={{ marginRight: "5px" }} />}
+                      {name}
+                    </Button>
+                  ))}
+              </Flex>
+
+              <Flex gap={25} alignItems="center">
+                {typeof window !== "undefined" &&
+                window.localStorage.getItem("isLogged") ? (
+                  <Button colorScheme="red" onClick={handleLogout}>
+                    Выйти
+                  </Button>
+                ) : (
+                  <Link to="/login">
+                    <Button colorScheme="whatsapp">Войти</Button>
+                  </Link>
+                )}
+                <Button colorScheme="teal" onClick={() => toggleColorMode()}>
+                  <FaRegLightbulb />
                 </Button>
-              ))}
-          </Flex>
-        ) : (
-          <Button>
-            <RxHamburgerMenu />
-          </Button>
-        )}
-        {window.innerWidth > 425 && (
-          <Flex gap={25} alignItems="center">
-            {typeof window !== "undefined" &&
-            window.localStorage.getItem("isLogged") ? (
-              <Button colorScheme="red" onClick={handleLogout}>
-                Выйти
-              </Button>
-            ) : (
-              <Link to="/login">
-                <Button colorScheme="whatsapp">Войти</Button>
-              </Link>
-            )}
-            <Button colorScheme="teal" onClick={() => toggleColorMode()}>
-              <FaRegLightbulb />
+              </Flex>
+            </>
+          ) : (
+            <Button>
+              <RxHamburgerMenu onClick={() => onOpen()} />
             </Button>
-          </Flex>
-        )}
+          )}{" "}
+        </Flex>
       </Flex>
-    </Flex>
+
+      <Modal onClose={onClose} size="full" isOpen={isOpen}>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader fontSize="3xl">Химия</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody
+            display="flex"
+            justifyContent="space-between"
+            flexDirection="column"
+          >
+            <Flex gap={25} flexDirection="column">
+              {typeof window !== "undefined" &&
+                window.localStorage.getItem("isLogged") &&
+                [username, "Мои курсы"].map((name: string, index: number) => (
+                  <Button
+                    colorScheme={
+                      activeMenu !== null && index === +activeMenu
+                        ? "whatsapp"
+                        : "gray"
+                    }
+                    key={index}
+                    onClick={() => {
+                      window.localStorage.setItem(
+                        "activeMenu",
+                        index.toString()
+                      );
+                      if (activeMenu)
+                        navigate(
+                          +activeMenu === 1
+                            ? username === "admin"
+                              ? "/client/admin"
+                              : "/account"
+                            : "/"
+                        );
+                    }}
+                  >
+                    {index === 0 && <BiUser style={{ marginRight: "5px" }} />}
+                    {name}
+                  </Button>
+                ))}
+            </Flex>
+
+            <Flex gap={25} flexDirection="column">
+              {typeof window !== "undefined" &&
+              window.localStorage.getItem("isLogged") ? (
+                <Button colorScheme="red" onClick={handleLogout}>
+                  Выйти
+                </Button>
+              ) : (
+                <Link to="/login">
+                  <Button colorScheme="whatsapp">Войти</Button>
+                </Link>
+              )}
+              <Button colorScheme="teal" onClick={() => toggleColorMode()}>
+                <FaRegLightbulb />
+              </Button>
+            </Flex>
+          </ModalBody>
+        </ModalContent>
+      </Modal>
+    </>
   );
 };
 

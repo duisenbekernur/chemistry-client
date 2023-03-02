@@ -25,9 +25,6 @@ const AddUserTemplate = () => {
       password,
     });
     setIsLoading(false);
-    const addToCloudRes = await axios.post("/admin/addUserToCloud", {
-      name: login,
-    });
 
     toast({
       title: data.message,
@@ -36,8 +33,6 @@ const AddUserTemplate = () => {
       duration: 4000,
       isClosable: true,
     });
-
-    console.log(data);
   };
 
   return (

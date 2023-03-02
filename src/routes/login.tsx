@@ -24,11 +24,11 @@ const Login = () => {
     e.preventDefault();
     setIsLoading(true);
     const { data } = await axios.post("/user/login", inputData);
+    setIsLoading(false);
     if (!data.token) {
       alert("Ошибка данных");
       return;
     }
-    setIsLoading(false);
     window.localStorage.setItem("token", data.token);
     window.localStorage.setItem("isLogged", "true");
     window.localStorage.setItem("activeMenu", "1");

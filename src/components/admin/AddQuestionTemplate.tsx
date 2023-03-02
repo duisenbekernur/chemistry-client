@@ -53,6 +53,7 @@ const AddQuestionTemplate: FC<AddQuestionTemplateProps> = ({ videoId }) => {
         <Heading mb="15px" size="md">
           Вопрос:{" "}
           <Input
+            value={question}
             onChange={(e) => setQuestion(e.target.value)}
             placeholder="вопрос"
             marginBottom={2}
