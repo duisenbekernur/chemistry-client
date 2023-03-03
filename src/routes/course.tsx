@@ -36,7 +36,7 @@ const Course = () => {
           <Button position="absolute" left="0" onClick={() => navigate("/")}>
             <FaArrowLeft />
           </Button>
-          <Text fontSize="3xl" marginBottom="15px">
+          <Text textAlign="left" mt="45px" fontSize="3xl" marginBottom="15px">
             Все видео курса
           </Text>
         </Flex>

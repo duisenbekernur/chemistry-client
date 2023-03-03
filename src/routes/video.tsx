@@ -36,19 +36,21 @@ const Video = () => {
     <>
       <Navbar />
       <Layout>
-        <Flex w="100%" justifyContent="center" position="relative">
-          <Button position="absolute" left="0" onClick={() => navigate(-1)}>
-            <FaArrowLeft />
-          </Button>
-          <Text fontSize="3xl" marginBottom="15px">
-            Видео: {video?.name}
-          </Text>
-        </Flex>
-        <Flex justifyContent={"center"}>
-          <ReactPlayer controls url={video?.link} />
-        </Flex>
+        <Flex flexDirection="column">
+          <Flex w="100%" justifyContent="center" position="relative">
+            <Button position="absolute" left="0" onClick={() => navigate(-1)}>
+              <FaArrowLeft />
+            </Button>
+            <Text textAlign="left" mt="45px" fontSize="3xl" marginBottom="15px">
+              {video?.name}
+            </Text>
+          </Flex>
+          <Flex justifyContent={"center"}>
+            <ReactPlayer controls url={video?.link} />
+          </Flex>
 
-        <Questions questions={questions} />
+          <Questions questions={questions} />
+        </Flex>
       </Layout>
     </>
   );

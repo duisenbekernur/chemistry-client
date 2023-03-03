@@ -141,7 +141,7 @@ const AdminCourseCard: FC<ICourse> = ({ id, name, createdAt }) => {
       <Card maxW="sm">
         <CardBody>
           <Image
-            src="./../src/assets/chemistry-1.jpg"
+            src="https://media.discordapp.net/attachments/1008571102328541215/1081119169069727865/Ernur_chemistry_course_image_poster_ea3d3fcc-7f0b-46be-8a87-026871fd7691.png?width=671&height=671"
             alt="Green double couch with wooden legs"
             borderRadius="lg"
           />

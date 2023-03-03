@@ -13,8 +13,9 @@ const Layout: FC<LayoutProps> = ({ children }) => {
       gap="25"
       maxW={1400}
       w="100%"
-      margin="auto"
-      justifyContent="center"
+      margin="0 auto"
+      // justifyContent="flex-start"
+      p="7px"
     >
       {children}
     </Flex>
