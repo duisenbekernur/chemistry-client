@@ -12,6 +12,7 @@ const Layout: FC<LayoutProps> = ({ children }) => {
       direction="column"
       gap="25"
       maxW={1400}
+      w="100%"
       margin="auto"
       justifyContent="center"
     >

@@ -26,15 +26,15 @@ function Home() {
   }, []);
 
   return (
-    <Flex flexDirection="column" alignItems="center">
+    <Flex w="100%" flexDirection="column" alignItems="center">
       <Navbar />
       <Layout>
         <Text fontSize="3xl" marginBottom="15px">
           Доступные курсы
         </Text>
-        <SimpleGrid columns={[1, 2, 3, 4]} spacing={5}>
-          {!isLoading ? (
-            courses.map((course: any, index: number) => (
+        {!isLoading ? (
+          courses.map((course: any, index: number) => (
+            <SimpleGrid columns={[1, 2, 3, 4]} spacing={5}>
               <CourseCard
                 id={course.id}
                 createdAt={course.createdAt}
@@ -42,13 +42,13 @@ function Home() {
                 name={course.name}
                 key={index}
               />
-            ))
-          ) : (
-            <>
-              <Sceletons />
-            </>
-          )}
-        </SimpleGrid>
+            </SimpleGrid>
+          ))
+        ) : (
+          <SimpleGrid w="100%" columns={[1, 2, 3, 4]} spacing={5}>
+            <Sceletons />
+          </SimpleGrid>
+        )}
       </Layout>
     </Flex>
   );

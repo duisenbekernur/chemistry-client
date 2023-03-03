@@ -28,19 +28,19 @@ const VideoCard: FC<IVideoCard> = ({
       overflow="hidden"
     >
       <Image
-        src="../src/assets/chemistry-1.jpg"
+        src="https://media.discordapp.net/attachments/1008571102328541215/1081119680686723122/Ernur_chemistry_video_poster_with_fun_equations_166792b8-f845-4a04-9dfd-bebfe073154e.png?width=671&height=671"
         alt="Green double couch with wooden legs"
         borderRadius="lg"
       />
 
-      <Box p="6" display="flex" alignItems="center" flexDirection="column">
+      <Box p="6" display="flex" alignItems="flex-start" flexDirection="column">
         <Text fontWeight="bold" fontSize="xl" mb="2">
           {name}
         </Text>
 
         <Link to={`/video/${id}`}>
-          <Button colorScheme="blue" size="sm" fontSize="xl">
-            Show
+          <Button colorScheme="blue" p={5} size="sm" fontSize="xl">
+            Посмотреть видео
           </Button>
         </Link>
       </Box>
