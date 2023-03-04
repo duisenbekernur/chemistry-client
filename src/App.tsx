@@ -6,6 +6,7 @@ import Navbar from "./components/Navbar";
 import Layout from "./components/Layout";
 import Sceletons from "./components/Sceletons";
 import { useNavigate } from "react-router-dom";
+import { BiSad } from "react-icons/bi";
 
 function Home() {
   const [courses, setCourses] = useState([]);
@@ -33,17 +34,30 @@ function Home() {
           Доступные курсы
         </Text>
         {!isLoading ? (
-          courses.map((course: any, index: number) => (
+          <>
             <SimpleGrid columns={[1, 2, 3, 4]} spacing={5}>
-              <CourseCard
-                id={course.id}
-                createdAt={course.createdAt}
-                updatedAt={course.updatedAt}
-                name={course.name}
-                key={index}
-              />
+              {courses?.map((course: any, index: number) => (
+                <CourseCard
+                  id={course.id}
+                  createdAt={course.createdAt}
+                  updatedAt={course.updatedAt}
+                  name={course.name}
+                  key={index}
+                />
+              ))}
             </SimpleGrid>
-          ))
+            {(courses?.length === 0) && (
+              <Text
+                fontSize="3xl"
+                display="flex"
+                w="100%"
+                alignItems="center"
+                gap="15px"
+              >
+                У вас еще нету курсов <BiSad />
+              </Text>
+            )}
+          </>
         ) : (
           <SimpleGrid w="100%" columns={[1, 2, 3, 4]} spacing={5}>
             <Sceletons />

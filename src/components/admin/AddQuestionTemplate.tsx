@@ -24,7 +24,6 @@ const AddQuestionTemplate: FC<AddQuestionTemplateProps> = ({ videoId }) => {
 
   const toast = useToast();
 
-  console.log("true", trueAnswers);
 
   const handleCreateQuestion = async () => {
     const { data } = await axios.post("/admin/createQuestion", {
@@ -41,7 +40,6 @@ const AddQuestionTemplate: FC<AddQuestionTemplateProps> = ({ videoId }) => {
       isClosable: true,
     });
 
-    console.log(data);
   };
 
   return (
@@ -66,7 +64,6 @@ const AddQuestionTemplate: FC<AddQuestionTemplateProps> = ({ videoId }) => {
                   const curArr = [...answers];
                   curArr[index] = e.target.value;
                   setAnswers(curArr);
-                  console.log(answers);
                 }}
                 placeholder="вариант ответа"
                 marginBottom={2}

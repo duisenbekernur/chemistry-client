@@ -14,7 +14,6 @@ const AllVideos = () => {
       const { data } = await axios.get("/admin/videos");
       setIsLoading(false);
       setVideos(data.videos);
-      console.log()
     }
 
     fetchUsers();

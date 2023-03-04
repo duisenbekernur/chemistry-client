@@ -15,7 +15,6 @@ import {
   useColorModeValue,
   useDisclosure,
 } from "@chakra-ui/react";
-import axios from "../axios";
 import React, { useEffect, useRef, useState } from "react";
 import { FaRegLightbulb } from "react-icons/fa";
 import { BiUser } from "react-icons/bi";
@@ -68,7 +67,6 @@ const Navbar = () => {
 
   useEffect(() => {
     checkAdmin();
-    console.log(window.innerWidth);
   }, [window.innerWidth]);
 
   return (
@@ -102,18 +100,20 @@ const Navbar = () => {
                       }
                       key={index}
                       onClick={() => {
+                        if (activeMenu) {
+                          if (+activeMenu !== index)
+                            navigate(
+                              +activeMenu === 1
+                                ? username === "admin"
+                                  ? "/client/admin"
+                                  : "/account"
+                                : "/"
+                            );
+                        }
                         window.localStorage.setItem(
                           "activeMenu",
                           index.toString()
                         );
-                        if (activeMenu)
-                          navigate(
-                            +activeMenu === 1
-                              ? username === "admin"
-                                ? "/client/admin"
-                                : "/account"
-                              : "/"
-                          );
                       }}
                     >
                       {index === 0 && <BiUser style={{ marginRight: "5px" }} />}

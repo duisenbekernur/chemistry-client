@@ -2,6 +2,7 @@ import axios from "axios";
 
 const instanse = axios.create({
   baseURL: "https://chemistry-serve.onrender.com/api/",
+  // baseURL: "http://localhost:8000/api/",
 });
 
 instanse.interceptors.request.use((config) => {

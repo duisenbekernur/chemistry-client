@@ -32,3 +32,20 @@ export interface IQuestion {
   videoId: number;
   answerIds: number[];
 }
+
+interface IChosenOptions {
+  chosenOptions: number;
+}
+
+export interface IPassedQuestion {
+  id: number;
+  userId: number;
+  videoId: number;
+  userAnswers: IChosenOptions[];
+  createdAt: string;
+  updatedAt: string;
+  answerIds: number[];
+  question: string;
+  answers: string[];
+  videoName: string
+}

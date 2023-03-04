@@ -8,17 +8,22 @@ import {
   Text,
 } from "@chakra-ui/react";
 import { HiArrowLeft, HiArrowRight } from "react-icons/hi";
-import { IQuestion } from "../types";
+import { IQuestion, IVideo } from "../types";
+import axios from "../axios";
+import { useParams } from "react-router-dom";
 
 interface QuestionsProps {
   questions: IQuestion[] | null;
+  video: IVideo | null;
 }
 
 interface IChosenAnswers {
   chosenOptions: number | null;
 }
 
-const Questions: FC<QuestionsProps> = ({ questions }) => {
+const alphabet = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l"];
+
+const Questions: FC<QuestionsProps> = ({ questions, video }) => {
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [currentQuestion, setCurrentQuestion] = useState<IQuestion | null>(
     null
@@ -27,6 +32,8 @@ const Questions: FC<QuestionsProps> = ({ questions }) => {
     useState<IChosenAnswers[] | null>(null);
   const [renderr, setRenderr] = useState(0);
   const [finished, setFinished] = useState(false);
+
+  const { videoId } = useParams();
 
   const handleNextQuestion = () => {
     localStorage.setItem(
@@ -53,7 +60,6 @@ const Questions: FC<QuestionsProps> = ({ questions }) => {
       let newArr = chosenOptionsOfAllQuestions;
       newArr[currentQuestionIndex].chosenOptions = index;
       setChosenOptionsOfAllQuestions(newArr);
-      console.log(chosenOptionsOfAllQuestions);
     }
     setRenderr(renderr + 1);
   };
@@ -65,12 +71,17 @@ const Questions: FC<QuestionsProps> = ({ questions }) => {
     setFinished(true);
     localStorage.setItem("finishedTest", "true");
 
-    countRightAnswers()
+    const { data } = await axios.post("/user/addPassedQuestion", {
+      //@ts-ignore
+      userId: JSON.parse(localStorage.getItem("userDatas")).id,
+      videoId: videoId,
+      userAnswers: chosenOptionsOfAllQuestions,
+      answerIds: questions?.map((elem: IQuestion, index: number) => {
+        return elem.answerIds;
+      }),
+      videoName: video?.name,
+    });
   };
-
-  const countRightAnswers =  () => {
-     
-  }
 
   useEffect(() => {
     if (questions) setCurrentQuestion(questions[currentQuestionIndex]);
@@ -85,16 +96,14 @@ const Questions: FC<QuestionsProps> = ({ questions }) => {
           arr.push({ chosenOptions: null });
         }
         setChosenOptionsOfAllQuestions(arr);
-        console.log("arr", arr);
       } else
         setChosenOptionsOfAllQuestions(
           //@ts-ignore
           JSON.parse(localStorage.getItem("userTest"))
         );
-      console.log("here", chosenOptionsOfAllQuestions);
     }
-    console.log("questions", questions);
   }, [questions]);
+  
 
   return (
     <Container w="100%" centerContent>
@@ -126,6 +135,7 @@ const Questions: FC<QuestionsProps> = ({ questions }) => {
               key={index}
             >
               <Text w="100%" key={answer}>
+                {`${alphabet[index]}) `}
                 {answer}
               </Text>
             </Button>

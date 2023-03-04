@@ -47,10 +47,8 @@ const AddVideoTemplate = () => {
       isClosable: true,
     });
 
-    console.log(data);
   };
 
-  console.log(videoLink);
 
   return (
     <Card w="400px">

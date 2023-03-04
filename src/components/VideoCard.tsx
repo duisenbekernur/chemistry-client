@@ -38,7 +38,7 @@ const VideoCard: FC<IVideoCard> = ({
           {name}
         </Text>
 
-        <Link to={`/video/${id}`}>
+        <Link to={`${window.location.pathname}/video/${id}`}>
           <Button colorScheme="blue" p={5} size="sm" fontSize="xl">
             Посмотреть видео
           </Button>

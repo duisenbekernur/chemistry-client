@@ -17,6 +17,7 @@ import { useEffect } from "react";
 import AddVideoTemplate from "../../components/admin/AddVideoTemplate";
 import { useNavigate } from "react-router-dom";
 import axios from "../../axios";
+import { decodeToken } from "react-jwt";
 
 const Admin = () => {
   const navigate = useNavigate();
@@ -28,9 +29,10 @@ const Admin = () => {
     }
 
     async function isAdmin() {
-      const { data } = await axios.get("/admin/users");
-
-      if (!data) {
+      //@ts-ignore
+      const decodedToken = decodeToken(localStorage.getItem("token"));
+      //@ts-ignore
+      if (!decodedToken.isAdmin) {
         navigate("/");
         return;
       }
@@ -40,7 +42,7 @@ const Admin = () => {
   }, []);
 
   return (
-    <Flex flexDirection="column">
+    <Flex flexDirection="column"  w="100%">
       <Navbar />
 
       <Tabs>

@@ -1,6 +1,4 @@
-import {
-  SimpleGrid,
-} from "@chakra-ui/react";
+import { SimpleGrid } from "@chakra-ui/react";
 import axios from "../../axios";
 import React, { useEffect, useState } from "react";
 import { IUser } from "../../types";

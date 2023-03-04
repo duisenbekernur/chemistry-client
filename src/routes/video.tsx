@@ -13,17 +13,18 @@ const Video = () => {
   const [video, setVideo] = useState<IVideo | null>(null);
   const [questions, setQuestions] = useState<IQuestion[] | null>(null);
 
-  const { id } = useParams();
+  const { videoId } = useParams();
   const navigate = useNavigate();
 
   const fetchVideo = async () => {
-    const { data } = await axios.get(`/admin/getVideo/${id}`);
+    const { data } = await axios.get(`/admin/getVideo/${videoId}`);
     setVideo(data.video);
   };
 
   const handleGetQuestionsOfVideo = async () => {
-    const { data } = await axios.get(`/admin/questions/${id}`);
+    const { data } = await axios.get(`/admin/questions/${videoId}`);
     setQuestions(data);
+    
   };
 
   useEffect(() => {
@@ -49,7 +50,7 @@ const Video = () => {
             <ReactPlayer controls url={video?.link} />
           </Flex>
 
-          <Questions questions={questions} />
+          <Questions video={video} questions={questions} />
         </Flex>
       </Layout>
     </>

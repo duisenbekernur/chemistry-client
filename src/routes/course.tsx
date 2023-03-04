@@ -7,24 +7,26 @@ import VideoCard from "../components/VideoCard";
 import { FaArrowLeft } from "react-icons/fa";
 import Layout from "../components/Layout";
 import Sceletons from "../components/Sceletons";
+import { BiSad } from "react-icons/bi";
 
 const Course = () => {
   const [videos, setVideos] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
 
-  const { id } = useParams();
+  const { courseId } = useParams();
   const navigate = useNavigate();
 
   const fetchVideos = async () => {
     setIsLoading(true);
-    const { data } = await axios.get(`/admin/getVideosOfCourse/${id}`);
+    const { data } = await axios.get(`/admin/getVideosOfCourse/${courseId}`);
     setIsLoading(false);
-    console.log(data);
     setVideos(data.videos);
   };
 
   useEffect(() => {
     if (!localStorage.getItem("token")) navigate("/login");
+    localStorage.removeItem("finishedTest");
+    localStorage.removeItem("userTest");
     fetchVideos();
   }, []);
 
@@ -43,22 +45,35 @@ const Course = () => {
 
         <SimpleGrid columns={[1, 2, 3, 4]} spacing={5}>
           {!isLoading ? (
-            videos?.map((video: any, index: number) => (
-              <VideoCard
-                id={video.id}
-                imageUrl={video.name}
-                createdAt={video.createdAt}
-                updatedAt={video.updatedAt}
-                name={video.name}
-                key={index}
-              />
-            ))
+            <>
+              {videos?.map((video: any, index: number) => (
+                <VideoCard
+                  id={video.id}
+                  imageUrl={video.name}
+                  createdAt={video.createdAt}
+                  updatedAt={video.updatedAt}
+                  name={video.name}
+                  key={index}
+                />
+              ))}
+            </>
           ) : (
             <>
               <Sceletons />
             </>
           )}
         </SimpleGrid>
+        {!isLoading && videos?.length === 0 && (
+          <Text
+            fontSize="3xl"
+            display="flex"
+            w="100%"
+            alignItems="center"
+            gap="15px"
+          >
+            В этот курс еще не добавлео видео <BiSad />
+          </Text>
+        )}
       </Layout>
     </Flex>
   );

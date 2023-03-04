@@ -28,7 +28,6 @@ const AddCourseTemplate = () => {
       isClosable: true,
     });
 
-    console.log(data);
   };
 
   return (
