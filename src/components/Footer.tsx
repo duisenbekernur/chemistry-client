@@ -11,7 +11,9 @@ const Footer = () => {
       justifyContent={"center"}
       bg={backgroundColor}
     >
-      <Text fontSize="2xl">© 2023, All rights rerserved</Text>
+      <Text fontSize="2xl" color="white">
+        © 2023, All rights reserved
+      </Text>
     </Flex>
   );
 };

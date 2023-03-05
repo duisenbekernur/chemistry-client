@@ -7,6 +7,7 @@ import {
   Box,
   Button,
   Flex,
+  Spinner,
   Text,
 } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
@@ -19,6 +20,7 @@ import { IPassedQuestion } from "../types";
 
 const Account = () => {
   const [userDatas, setUserDatas] = useState<any>();
+  const [isLoadingQuestions, setIsLoadingQuestions] = useState(false);
   const [passedQuestions, setPassedQuestions] = useState<
     IPassedQuestion[] | null
   >(null);
@@ -31,7 +33,9 @@ const Account = () => {
   };
 
   const getQuestions = async () => {
+    setIsLoadingQuestions(true);
     const { data } = await axios.get(`/user/passedQuestions/${userDatas.id}`);
+    setIsLoadingQuestions(false);
     setPassedQuestions(data);
   };
 
@@ -63,6 +67,16 @@ const Account = () => {
         {passedQuestions?.length === 0 && <Text fontSize="xl">Пусто</Text>}
 
         <Accordion defaultIndex={[0]} allowMultiple>
+          {isLoadingQuestions && (
+            <Spinner
+              m="0 auto"
+              thickness="4px"
+              speed="0.65s"
+              emptyColor="gray.200"
+              color="blue.500"
+              size="xl"
+            />
+          )}
           {passedQuestions?.map(
             (passedQuestion: IPassedQuestion, index: number) => (
               <AccordionItem key={index}>

@@ -173,13 +173,17 @@ const Navbar = () => {
                         index.toString()
                       );
                       if (activeMenu)
-                        navigate(
-                          +activeMenu === 1
-                            ? username === "admin"
-                              ? "/client/admin"
-                              : "/account"
-                            : "/"
-                        );
+                        if (+activeMenu !== index) {
+                          navigate(
+                            +activeMenu === 1
+                              ? username === "admin"
+                                ? "/client/admin"
+                                : "/account"
+                              : "/"
+                          );
+                        } else {
+                          onClose();
+                        }
                     }}
                   >
                     {index === 0 && <BiUser style={{ marginRight: "5px" }} />}
