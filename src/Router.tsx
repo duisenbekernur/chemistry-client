@@ -10,6 +10,7 @@ import Login from "./routes/login";
 import NotFound from "./routes/NotFound";
 import Video from "./routes/video";
 import { IVideo } from "./types";
+import Chat from "./routes/Chat";
 
 const Router = () => {
   const navigate = useNavigate();
@@ -75,6 +76,7 @@ const Router = () => {
         <Route path="/account" element={<Account />} />
         <Route path="/course/:courseId/video/:videoId" element={<Video />} />
         <Route path="/client/admin/" element={<Admin />} />
+        <Route path="/chat" element={<Chat />} />
         <Route path="/*" element={<NotFound />} />
       </Routes>
     </Flex>

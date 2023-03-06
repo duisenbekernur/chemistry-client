@@ -83,7 +83,7 @@ const AdminVideoCard: FC<IVideo> = (video) => {
             marginBottom={2}
             onClick={() => {
               onOpen();
-              handleGetQuestions();
+              if(!questions) handleGetQuestions();
             }}
           >
             Вопросы видео
@@ -115,11 +115,21 @@ const AdminVideoCard: FC<IVideo> = (video) => {
           </ModalHeader>
           <ModalCloseButton />
           <ModalBody display="flex" gap={3}>
+            {isLoadingQuestions && (
+              <Spinner
+                thickness="4px"
+                speed="0.65s"
+                emptyColor="gray.200"
+                color="blue.500"
+                size="xl"
+              />
+            )}
             {questions?.map((question: IQuestion, index: number) => (
               <Card w={"min-content"} position="relative">
                 <CardHeader display="flex" flexDirection="column" gap={3}>
                   <Heading size="md">ID: {question.id}</Heading>
                   <Heading size="md">{question.question}</Heading>
+
                   {question.answers.map(
                     (answer: string, answerIndex: number) => (
                       <>

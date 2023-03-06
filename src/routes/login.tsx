@@ -34,6 +34,8 @@ const Login = () => {
     window.localStorage.setItem("activeMenu", "1");
 
     const decodedToken = decodeToken(data.token);
+    console.log(data);
+    
     localStorage.setItem("userDatas", JSON.stringify(decodedToken));
     navigate("/");
   };

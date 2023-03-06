@@ -53,7 +53,7 @@ const Navbar = () => {
 
   useEffect(() => {
     const handleResize = () => {
-      setIsMobile(window.innerWidth < 440);
+      setIsMobile(window.innerWidth < 550);
     };
 
     handleResize();
@@ -91,35 +91,49 @@ const Navbar = () => {
               <Flex gap={25} alignItems="center">
                 {typeof window !== "undefined" &&
                   window.localStorage.getItem("isLogged") &&
-                  [username, "Мои курсы"].map((name: string, index: number) => (
-                    <Button
-                      colorScheme={
-                        activeMenu !== null && index === +activeMenu
-                          ? "whatsapp"
-                          : "gray"
-                      }
-                      key={index}
-                      onClick={() => {
-                        if (activeMenu) {
-                          if (+activeMenu !== index)
-                            navigate(
-                              +activeMenu === 1
-                                ? username === "admin"
-                                  ? "/client/admin"
-                                  : "/account"
-                                : "/"
-                            );
+                  [username, "Мои курсы", "Чат"].map(
+                    (name: string, index: number) => (
+                      <Button
+                        colorScheme={
+                          activeMenu !== null && index === +activeMenu
+                            ? "whatsapp"
+                            : "gray"
                         }
-                        window.localStorage.setItem(
-                          "activeMenu",
-                          index.toString()
-                        );
-                      }}
-                    >
-                      {index === 0 && <BiUser style={{ marginRight: "5px" }} />}
-                      {name}
-                    </Button>
-                  ))}
+                        key={index}
+                        onClick={() => {
+                          if (activeMenu) {
+                            if (+activeMenu !== index)
+                              navigate(
+                                +activeMenu === 0
+                                  ? index === 1
+                                    ? "/"
+                                    : "/chat"
+                                  : +activeMenu === 1
+                                  ? index === 0
+                                    ? username === "admin"
+                                      ? "/client/admin"
+                                      : "/account"
+                                    : "/chat"
+                                  : index === 0
+                                  ? username === "admin"
+                                    ? "/client/admin"
+                                    : "/account"
+                                  : "/"
+                              );
+                          }
+                          window.localStorage.setItem(
+                            "activeMenu",
+                            index.toString()
+                          );
+                        }}
+                      >
+                        {index === 0 && (
+                          <BiUser style={{ marginRight: "5px" }} />
+                        )}
+                        {name}
+                      </Button>
+                    )
+                  )}
               </Flex>
 
               <Flex gap={25} alignItems="center">
@@ -159,37 +173,49 @@ const Navbar = () => {
             <Flex gap={25} flexDirection="column">
               {typeof window !== "undefined" &&
                 window.localStorage.getItem("isLogged") &&
-                [username, "Мои курсы"].map((name: string, index: number) => (
-                  <Button
-                    colorScheme={
-                      activeMenu !== null && index === +activeMenu
-                        ? "whatsapp"
-                        : "gray"
-                    }
-                    key={index}
-                    onClick={() => {
-                      window.localStorage.setItem(
-                        "activeMenu",
-                        index.toString()
-                      );
-                      if (activeMenu)
-                        if (+activeMenu !== index) {
-                          navigate(
-                            +activeMenu === 1
-                              ? username === "admin"
-                                ? "/client/admin"
-                                : "/account"
-                              : "/"
-                          );
-                        } else {
-                          onClose();
-                        }
-                    }}
-                  >
-                    {index === 0 && <BiUser style={{ marginRight: "5px" }} />}
-                    {name}
-                  </Button>
-                ))}
+                [username, "Мои курсы", "Чат"].map(
+                  (name: string, index: number) => (
+                    <Button
+                      colorScheme={
+                        activeMenu !== null && index === +activeMenu
+                          ? "whatsapp"
+                          : "gray"
+                      }
+                      key={index}
+                      onClick={() => {
+                        window.localStorage.setItem(
+                          "activeMenu",
+                          index.toString()
+                        );
+                        if (activeMenu)
+                          if (+activeMenu !== index) {
+                            navigate(
+                              +activeMenu === 0
+                                ? index === 1
+                                  ? "/"
+                                  : "/chat"
+                                : +activeMenu === 1
+                                ? index === 0
+                                  ? username === "admin"
+                                    ? "/client/admin"
+                                    : "/account"
+                                  : "/chat"
+                                : index === 0
+                                ? username === "admin"
+                                  ? "/client/admin"
+                                  : "/account"
+                                : "/"
+                            );
+                          } else {
+                            onClose();
+                          }
+                      }}
+                    >
+                      {index === 0 && <BiUser style={{ marginRight: "5px" }} />}
+                      {name}
+                    </Button>
+                  )
+                )}
             </Flex>
 
             <Flex gap={25} flexDirection="column">

@@ -34,6 +34,7 @@ const AdminCourseCard: FC<ICourse> = ({ id, name, createdAt }) => {
   const [isOpenVideoModal, setIsOpenVideoModal] = useState(false);
   const [isLoadingDeletevideo, setIsLoadingDeletevideo] = useState(false);
   const [isLoadingAddVideo, setIsLoadingAddVideo] = useState(false);
+  const [isLoadingVideos, setIsLoadingVideos] = useState(false);
 
   const [users, setUsers] = useState<IUser[] | null>(null);
   const [videos, setVideos] = useState<IVideo[] | null>(null);
@@ -41,8 +42,10 @@ const AdminCourseCard: FC<ICourse> = ({ id, name, createdAt }) => {
   const [addVideoId, setAddVideoId] = useState<string | null>(null);
 
   const getVideosOfCourse = async () => {
+    setIsLoadingVideos(true);
     const { data } = await axios.get(`/admin/getVideosOfCourse/${id}`);
     setVideos(data.videos);
+    setIsLoadingVideos(false);
   };
 
   const handlleAddVideoToCourse = async (videoId: number) => {
@@ -178,7 +181,7 @@ const AdminCourseCard: FC<ICourse> = ({ id, name, createdAt }) => {
               variant="solid"
               colorScheme="green"
               onClick={() => {
-                getVideosOfCourse();
+                if (!videos) getVideosOfCourse();
                 setIsOpenVideoModal(true);
               }}
             >
@@ -290,6 +293,15 @@ const AdminCourseCard: FC<ICourse> = ({ id, name, createdAt }) => {
           <ModalCloseButton />
           <ModalBody>
             <SimpleGrid columns={[1, 2, 3, 4, 5, 6]} spacing={5}>
+              {isLoadingVideos && (
+                <Spinner
+                  thickness="4px"
+                  speed="0.65s"
+                  emptyColor="gray.200"
+                  color="blue.500"
+                  size="xl"
+                />
+              )}
               {videos?.map((video: IVideo, index: number) => (
                 <Card border="1px solid black" key={index}>
                   <CardHeader>
